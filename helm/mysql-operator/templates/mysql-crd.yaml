@@ -1,0 +1,126 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: mysqls.database.elnino.tech
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.18.0
+  labels:
+  {{- include "mysql-operator.labels" . | nindent 4 }}
+spec:
+  group: database.elnino.tech
+  names:
+    kind: MySQL
+    listKind: MySQLList
+    plural: mysqls
+    singular: mysql
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: MySQL is the Schema for the mysqls API.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MySQLSpec defines the desired state of MySQL.
+            properties:
+              groupReplication:
+                properties:
+                  forceBootstrap:
+                    type: boolean
+                  groupName:
+                    pattern: ^[0-9a-fA-F-]{36}$
+                    type: string
+                  memberWeight:
+                    format: int32
+                    type: integer
+                  mode:
+                    default: SinglePrimary
+                    enum:
+                    - SinglePrimary
+                    - MultiPrimary
+                    type: string
+                  replicationUserSecret:
+                    type: string
+                  seedCount:
+                    format: int32
+                    type: integer
+                type: object
+              image:
+                default: percona/percona-server:8.4
+                type: string
+              initImage:
+                default: github.com/elnino/mysql-operator/init:latest
+                type: string
+              mysqlConf:
+                additionalProperties:
+                  anyOf:
+                  - type: integer
+                  - type: string
+                  x-kubernetes-int-or-string: true
+                description: ConfigMap
+                type: object
+              port:
+                default: 3306
+                format: int32
+                type: integer
+              replicas:
+                default: 3
+                format: int32
+                type: integer
+              rootPasswordSecretName:
+                type: string
+              storageClassName:
+                type: string
+              storageSize:
+                default: 10Gi
+                type: string
+            type: object
+          status:
+            description: MySQLStatus defines the observed state of MySQL.
+            properties:
+              currentReplicas:
+                format: int32
+                type: integer
+              groupReplicationBootstrapped:
+                type: boolean
+              message:
+                type: string
+              phase:
+                description: |-
+                  INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+                  Important: Run "make" to regenerate code after modifying this file
+                type: string
+              readyReplicas:
+                format: int32
+                type: integer
+              restartCandidate:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

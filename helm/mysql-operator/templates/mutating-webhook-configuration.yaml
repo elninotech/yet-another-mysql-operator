@@ -1,0 +1,33 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ include "mysql-operator.fullname" . }}-mutating-webhook-configuration
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Release.Namespace }}/{{ include "mysql-operator.fullname" . }}-serving-cert
+  labels:
+  {{- include "mysql-operator.labels" . | nindent 4 }}
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    caBundle: Cg==
+    service:
+      name: '{{ include "mysql-operator.fullname" . }}-webhook-service'
+      namespace: '{{ .Release.Namespace }}'
+      path: /mutate-database-elnino-tech-v1alpha1-mysql
+      port: 443
+  failurePolicy: Fail
+  matchPolicy: Equivalent
+  name: mmysql.database.elnino.tech
+  rules:
+  - apiGroups:
+    - database.elnino.tech
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - mysqls
+  sideEffects: None
+  timeoutSeconds: 10

@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "mysql-operator.fullname" . }}-serving-cert
+  labels:
+  {{- include "mysql-operator.labels" . | nindent 4 }}
+spec:
+  dnsNames:
+  - '{{ include "mysql-operator.fullname" . }}-webhook-service.{{ .Release.Namespace
+    }}.svc'
+  - '{{ include "mysql-operator.fullname" . }}-webhook-service.{{ .Release.Namespace
+    }}.svc.{{ .Values.kubernetesClusterDomain }}'
+  issuerRef:
+    group: cert-manager.io
+    kind: Issuer
+    name: '{{ include "mysql-operator.fullname" . }}-selfsigned-issuer'
+  secretName: webhook-server-cert

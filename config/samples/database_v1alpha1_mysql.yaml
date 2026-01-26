@@ -1,0 +1,24 @@
+apiVersion: database.elnino.tech/v1alpha1
+kind: MySQL
+metadata:
+  labels:
+    app.kubernetes.io/name: mysql-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: mysql-sample
+  namespace: mysql-operator-test 
+spec:
+  image: percona/percona-server:8.4 # Preferably Percona images (MySQL)
+  initImage: github.com/elnino/mysql-operator/init:latest # Optional: host init image yourself
+  storageClassName: default # Adjust to setup
+  storageSize: 10Gi # Default 10Gi scale to desired need.
+  port: 3306 # Optional: Change MySQL port
+  replicas: 3 # Optional: scale to more or less replicas (max 9.)
+  rootPasswordSecretName: mysql-sample-root-credentials # Optional: root secret name
+  mysqlConf: # Optional: Example config options (https://dev.mysql.com/doc/refman/8.4/en/server-system-variables.html)
+    max-connections: 800
+    innodb-buffer-pool-size: 1G 
+  groupReplication:
+    groupName: 123e4567-e89b-12d3-a456-426614174000 # UUID (Optional)
+    mode: SinglePrimary # Change Mode (Optional)
+    forceBootstrap: false # Optional Force the bootstrap
+    replicationUserSecret: mysql-sample-repl-creds # Optional: Set replication secret name

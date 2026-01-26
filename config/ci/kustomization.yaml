@@ -1,0 +1,6 @@
+resources:
+  - ../default
+images:
+  - name: controller
+    newName: github.com/elnino/mysql-operator
+    newTag: latest
