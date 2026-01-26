@@ -10,7 +10,7 @@ controllerManager:
         drop:
         - ALL
     image:
-      repository: github.com/elnino/mysql-operator
+      repository: ghcr.io/elninotech/mysql-operator:latest
       tag: latest
     resources:
       limits:

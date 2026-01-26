@@ -8,7 +8,7 @@ metadata:
   namespace: mysql-operator-test 
 spec:
   image: percona/percona-server:8.4 # Preferably Percona images (MySQL)
-  initImage: github.com/elnino/mysql-operator/init:latest # Optional: host init image yourself
+  initImage: ghcr.io/elninotech/mysql-operator/init:latest # Optional: host init image yourself
   storageClassName: default # Adjust to setup
   storageSize: 10Gi # Default 10Gi scale to desired need.
   port: 3306 # Optional: Change MySQL port
