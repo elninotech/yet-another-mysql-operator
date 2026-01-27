@@ -38,7 +38,6 @@ type MySQLSpec struct {
 	// +kubebuilder:default="percona/percona-server:8.4"
 	Image string `json:"image,omitempty"`
 	// +kubebuilder:default="ghcr.io/elninotech/mysql-operator/init:latest"
-
 	InitImage        string `json:"initImage,omitempty"`
 	StorageClassName string `json:"storageClassName,omitempty"`
 	// +kubebuilder:default="10Gi"
