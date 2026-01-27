@@ -66,6 +66,12 @@ type MySQLStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name=Phase,type=string,JSONPath=`.status.phase`
+// +kubebuilder:printcolumn:name=Ready,type=integer,JSONPath=`.status.readyReplicas`
+// +kubebuilder:printcolumn:name=Current,type=integer,JSONPath=`.status.currentReplicas`
+// +kubebuilder:printcolumn:name=GRBootstrapped,type=boolean,JSONPath=`.status.groupReplicationBootstrapped`
+// +kubebuilder:printcolumn:name=RestartCandidate,type=string,JSONPath=`.status.restartCandidate`,priority=1
+// +kubebuilder:printcolumn:name=Age,type=date,JSONPath=`.metadata.creationTimestamp`
 
 // MySQL is the Schema for the mysqls API.
 type MySQL struct {
