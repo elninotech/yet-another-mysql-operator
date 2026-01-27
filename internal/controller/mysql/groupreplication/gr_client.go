@@ -147,6 +147,15 @@ func ensureSelectable(ctx context.Context, db *sql.DB) error {
 //
 // Returns possible errors
 func ensureReplicationUser(ctx context.Context, db *sql.DB, pw string) error {
+	var exists int
+	err := db.QueryRowContext(ctx, "SELECT 1 FROM mysql.user WHERE user='rpl_user' AND host='%' LIMIT 1").Scan(&exists)
+	if err != nil && err != sql.ErrNoRows {
+		return fmt.Errorf("ensure replica user: %w", err)
+	}
+	if err == nil {
+		return nil
+	}
+
 	statements := []string{
 		"SET SQL_LOG_BIN=0",
 		"CREATE USER IF NOT EXISTS rpl_user@'%' IDENTIFIED WITH 'caching_sha2_password' BY ?",

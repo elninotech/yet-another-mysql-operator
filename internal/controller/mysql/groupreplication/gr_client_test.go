@@ -136,11 +136,12 @@ func TestPickRestartCandidate(t *testing.T) {
 // --- stub driver helpers ---
 
 type stubConfig struct {
-	onlineMember  bool
-	inGroupState  string
-	gtidExecuted  string
-	gtidCertified string
-	subtract      map[string]string
+	onlineMember   bool
+	inGroupState   string
+	gtidExecuted   string
+	gtidCertified  string
+	subtract       map[string]string
+	replUserExists bool
 }
 
 type stubDriver struct {
@@ -185,6 +186,11 @@ func (c *stubConn) QueryContext(ctx context.Context, query string, args []driver
 	case strings.Contains(query, "replication_group_members") && strings.Contains(query, "@@server_uuid"):
 		if c.cfg.inGroupState != "" {
 			return newRows([][]driver.Value{{c.cfg.inGroupState}}), nil
+		}
+		return newRows(nil), nil
+	case strings.Contains(strings.ToLower(query), "from mysql.user"):
+		if c.cfg.replUserExists {
+			return newRows([][]driver.Value{{int64(1)}}), nil
 		}
 		return newRows(nil), nil
 	case strings.Contains(query, "@@GLOBAL.GTID_EXECUTED"):
@@ -238,4 +244,13 @@ func (r *stubRows) Next(dest []driver.Value) error {
 func newStubDB(cfg stubConfig) *sql.DB {
 	drv := &stubDriver{cfg: cfg}
 	return sql.OpenDB(&stubConnector{drv: drv})
+}
+
+func TestEnsureReplicationUserSkipsWhenExists(t *testing.T) {
+	ctx := context.Background()
+	db := newStubDB(stubConfig{replUserExists: true})
+
+	if err := ensureReplicationUser(ctx, db, "pw"); err != nil {
+		t.Fatalf("ensureReplicationUser (existing user) returned error: %v", err)
+	}
 }
