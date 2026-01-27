@@ -10,6 +10,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/client-go/util/retry"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
@@ -114,8 +115,16 @@ func (r *MySQLReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 			mysql.Status.Phase = "Pending"
 			mysql.Status.Message = "Waiting for pod readiness"
 		}
-		if err := r.Status().Update(ctx, &mysql); err != nil {
-			logger.Error(err, "status update failed")
+		desiredStatus := mysql.Status
+		if err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+			var latest databasev1alpha1.MySQL
+			if err := r.Get(ctx, req.NamespacedName, &latest); err != nil {
+				return err
+			}
+			latest.Status = desiredStatus
+			return r.Status().Update(ctx, &latest)
+		}); err != nil {
+			logger.Error(err, "status update failed after retry")
 		}
 
 		// Groupreplication Startup
