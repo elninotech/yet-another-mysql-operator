@@ -1,17 +1,17 @@
 controllerManager:
   manager:
     args:
-    - --leader-elect
-    - --health-probe-bind-address=:8081
-    - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs
+      - --leader-elect
+      - --health-probe-bind-address=:8081
+      - --webhook-cert-path=/tmp/k8s-webhook-server/serving-certs
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
     image:
       repository: ghcr.io/elninotech/yet-another-mysql-operator
-      tag: 0.5.0-rc.1
+      tag: 0.5.0
     resources:
       limits:
         cpu: 500m
@@ -30,10 +30,10 @@ controllerManager:
 kubernetesClusterDomain: cluster.local
 metricsService:
   ports:
-  - name: https
-    port: 8443
-    protocol: TCP
-    targetPort: 8443
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
   type: ClusterIP
 serviceAccount:
   annotations: {}
@@ -42,7 +42,7 @@ serviceAccount:
   name: ""
 webhookService:
   ports:
-  - port: 443
-    protocol: TCP
-    targetPort: 9443
+    - port: 443
+      protocol: TCP
+      targetPort: 9443
   type: ClusterIP
