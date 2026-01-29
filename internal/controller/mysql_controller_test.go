@@ -128,7 +128,7 @@ var _ = Describe("MySQL Controller", func() {
 
 			sts := &appsv1.StatefulSet{}
 			Expect(k8sClient.Get(ctx, types.NamespacedName{Name: fetched.Name, Namespace: fetched.Namespace}, sts)).To(Succeed())
-			Expect(sts.Spec.Template.Annotations["mysql-operator/config-hash"]).To(Equal(util.HashConfigMapData(cfg.Data)))
+			Expect(sts.Spec.Template.Annotations[util.ConfigHashAnnotation]).To(Equal(util.HashConfigMapData(cfg.Data)))
 			Expect(sts.Spec.Template.Spec.Containers).To(HaveLen(1))
 			container := sts.Spec.Template.Spec.Containers[0]
 			Expect(container.Image).To(Equal(fetched.Spec.Image))
