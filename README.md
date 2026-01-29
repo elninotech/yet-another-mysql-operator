@@ -1,4 +1,4 @@
-# YAMO (Yet-Another-YAMO)
+# YAMO (Yet-Another-MySQL-Operator)
 
 ## Introduction
 
