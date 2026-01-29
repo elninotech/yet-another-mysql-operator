@@ -5,11 +5,11 @@ import (
 	"encoding/hex"
 	"sort"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	"github.com/elninotech/mysql-operator/internal/controller/util/constants"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 )
 
-const ConfigHashAnnotation = "mysql-operator/config-hash"
+const ConfigHashAnnotation = "yamo/config-hash"
 
 func ClusterSecretName(mysql *databasev1alpha1.MySQL) string {
 	if mysql.Spec.RootPasswordSecretName != "" {

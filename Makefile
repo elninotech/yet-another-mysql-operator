@@ -28,8 +28,8 @@ BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 # This variable is used to construct full image tags for bundle and catalog images.
 #
 # For example, running 'make bundle-build bundle-push catalog-build catalog-push' will build and push both
-# elnino.tech/mysql-operator-bundle:$VERSION and elnino.tech/mysql-operator-catalog:$VERSION.
-IMAGE_TAG_BASE ?= elnino.tech/mysql-operator
+# elnino.tech/yet-another-mysql-operator-bundle:$VERSION and elnino.tech/yet-another-mysql-operator-catalog:$VERSION.
+IMAGE_TAG_BASE ?= elnino.tech/yet-another-mysql-operator
 
 # BUNDLE_IMG defines the image:tag used for the bundle.
 # You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
@@ -117,7 +117,7 @@ test: manifests generate fmt vet setup-envtest ## Run tests.
 # The default setup assumes Kind is pre-installed and builds/loads the Manager Docker image locally.
 # CertManager is installed by default; skip with:
 # - CERT_MANAGER_INSTALL_SKIP=true
-KIND_CLUSTER ?= mysql-operator-test-e2e
+KIND_CLUSTER ?= yet-another-mysql-operator-test-e2e
 
 .PHONY: setup-test-e2e
 setup-test-e2e: ## Set up a Kind cluster for e2e tests if it does not exist
@@ -195,10 +195,10 @@ PLATFORMS ?= linux/arm64,linux/amd64,linux/s390x,linux/ppc64le
 docker-buildx: ## Build and push docker image for the manager for cross-platform support
 	# copy existing Dockerfile and insert --platform=${BUILDPLATFORM} into Dockerfile.cross, and preserve the original Dockerfile
 	sed -e '1 s/\(^FROM\)/FROM --platform=\$$\{BUILDPLATFORM\}/; t' -e ' 1,// s//FROM --platform=\$$\{BUILDPLATFORM\}/' Dockerfile > Dockerfile.cross
-	- $(CONTAINER_TOOL) buildx create --name mysql-operator-builder
-	$(CONTAINER_TOOL) buildx use mysql-operator-builder
+	- $(CONTAINER_TOOL) buildx create --name yet-another-mysql-operator-builder
+	$(CONTAINER_TOOL) buildx use yet-another-mysql-operator-builder
 	- $(CONTAINER_TOOL) buildx build --push --platform=$(PLATFORMS) --tag ${IMG} -f Dockerfile.cross .
-	- $(CONTAINER_TOOL) buildx rm mysql-operator-builder
+	- $(CONTAINER_TOOL) buildx rm yet-another-mysql-operator-builder
 	rm Dockerfile.cross
 
 .PHONY: build-installer
@@ -378,7 +378,7 @@ catalog-push: ## Push a catalog image.
 
 HELMIFY ?= $(LOCALBIN)/helmify
 KUSTOMIZE_DIR ?= config/default
-CHART_NAME ?= helm/mysql-operator
+CHART_NAME ?= helm/yamo
 
 # Derive chart/app version from git tag; expects tags like v0.3.1 or 0.3.1
 GIT_TAG     ?= $(shell git tag --sort=-v:refname | head -n1)
@@ -389,8 +389,8 @@ APP_VERSION   ?= $(CHART_VERSION)
 helm-package: ## Package the chart using the git tag for versioning
 	@test -n "$(CHART_VERSION)" || (echo "No git tag found; set CHART_VERSION manually"; exit 1)
 	mkdir -p dist
-	perl -0pi -e 's/^version: .*/version: $(CHART_VERSION)/m; s/^appVersion: .*/appVersion: \"$(APP_VERSION)\"/m' helm/mysql-operator/Chart.yaml
-	helm package helm/mysql-operator --version "$(CHART_VERSION)" --app-version "$(APP_VERSION)" -d dist
+	perl -0pi -e 's/^version: .*/version: $(CHART_VERSION)/m; s/^appVersion: .*/appVersion: \"$(APP_VERSION)\"/m' helm/yamo/Chart.yaml
+	helm package helm/yamo --version "$(CHART_VERSION)" --app-version "$(APP_VERSION)" -d dist
 
 
 .PHONY: helmify

@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 

@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
-  name: selfsigned-issuer       # becomes mysql-operator-selfsigned-issuer after namePrefix
+  name: selfsigned-issuer       # becomes yamo-selfsigned-issuer after namePrefix
   namespace: system
 spec:
   selfSigned: {}
@@ -9,14 +9,14 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: serving-cert            # becomes mysql-operator-serving-cert after namePrefix
+  name: serving-cert            # becomes yamo-serving-cert after namePrefix
   namespace: system
 spec:
   dnsNames:
-    - mysql-operator-webhook-service.mysql-operator-system.svc
-    - mysql-operator-webhook-service.mysql-operator-system.svc.cluster.local
+    - yamo-webhook-service.yamo-system.svc
+    - yamo-webhook-service.yamo-system.svc.cluster.local
   issuerRef:
     kind: Issuer
     group: cert-manager.io
-    name: mysql-operator-selfsigned-issuer
+    name: yamo-selfsigned-issuer
   secretName: webhook-server-cert

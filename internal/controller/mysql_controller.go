@@ -16,11 +16,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	"github.com/elninotech/mysql-operator/internal/controller/k8s/configmap"
-	"github.com/elninotech/mysql-operator/internal/controller/util/constants"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/k8s/configmap"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 
-	util "github.com/elninotech/mysql-operator/internal/controller/util"
+	util "github.com/elninotech/yet-another-mysql-operator/internal/controller/util"
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"

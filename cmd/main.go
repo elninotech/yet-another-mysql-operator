@@ -21,8 +21,8 @@ import (
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	"github.com/elninotech/mysql-operator/internal/controller"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller"
 	// +kubebuilder:scaffold:imports
 )
 

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"sync"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	groupreplication "github.com/elninotech/mysql-operator/internal/controller/mysql/groupreplication"
-	"github.com/elninotech/mysql-operator/internal/controller/util/constants"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	groupreplication "github.com/elninotech/yet-another-mysql-operator/internal/controller/mysql/groupreplication"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	corev1 "k8s.io/api/core/v1"

@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/elninotech/mysql-operator/test/utils"
+	"github.com/elninotech/yet-another-mysql-operator/test/utils"
 )
 
 var (

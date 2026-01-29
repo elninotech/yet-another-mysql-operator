@@ -10,8 +10,8 @@ controllerManager:
         drop:
         - ALL
     image:
-      repository: ghcr.io/elninotech/mysql-operator
-      tag: 0.4.41
+      repository: ghcr.io/elninotech/yet-another-mysql-operator
+      tag: 0.4.4-dev.2
     resources:
       limits:
         cpu: 500m

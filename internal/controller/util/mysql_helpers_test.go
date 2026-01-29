@@ -3,8 +3,8 @@ package util
 import (
 	"testing"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	"github.com/elninotech/mysql-operator/internal/controller/util/constants"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 	"github.com/onsi/gomega"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

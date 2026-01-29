@@ -6,9 +6,9 @@ import (
 	"strconv"
 	"strings"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	groupreplication "github.com/elninotech/mysql-operator/internal/controller/mysql/groupreplication"
-	"github.com/elninotech/mysql-operator/internal/controller/util/constants"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	groupreplication "github.com/elninotech/yet-another-mysql-operator/internal/controller/mysql/groupreplication"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
 

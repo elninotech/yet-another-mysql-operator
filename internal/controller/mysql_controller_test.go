@@ -17,9 +17,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	"github.com/elninotech/mysql-operator/internal/controller/util"
-	"github.com/elninotech/mysql-operator/internal/controller/util/constants"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 )
 
 var _ = Describe("MySQL Controller", func() {
