@@ -11,20 +11,20 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/elninotech/mysql-operator/test/utils"
+	"github.com/elninotech/yet-another-mysql-operator/test/utils"
 )
 
 // namespace where the project is deployed in
-const namespace = "mysql-operator-system"
+const namespace = "yamo-system"
 
 // serviceAccountName created for the project
-const serviceAccountName = "mysql-operator-controller-manager"
+const serviceAccountName = "yamo-controller-manager"
 
 // metricsServiceName is the name of the metrics service of the project
-const metricsServiceName = "mysql-operator-controller-manager-metrics-service"
+const metricsServiceName = "yamo-controller-manager-metrics-service"
 
 // metricsRoleBindingName is the name of the RBAC that will be created to allow get the metrics data
-const metricsRoleBindingName = "mysql-operator-metrics-binding"
+const metricsRoleBindingName = "yamo-metrics-binding"
 
 var _ = Describe("Manager", Ordered, func() {
 	var controllerPodName string
@@ -157,7 +157,7 @@ var _ = Describe("Manager", Ordered, func() {
 		It("should ensure the metrics endpoint is serving metrics", func() {
 			By("creating a ClusterRoleBinding for the service account to allow access to metrics")
 			cmd := exec.Command("kubectl", "create", "clusterrolebinding", metricsRoleBindingName,
-				"--clusterrole=mysql-operator-metrics-reader",
+				"--clusterrole=yamo-metrics-reader",
 				fmt.Sprintf("--serviceaccount=%s:%s", namespace, serviceAccountName),
 			)
 			_, err := utils.Run(cmd)

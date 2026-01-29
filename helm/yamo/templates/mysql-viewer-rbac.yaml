@@ -1,16 +1,18 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ include "mysql-operator.fullname" . }}-mysql-admin-role
+  name: {{ include "yamo.fullname" . }}-mysql-viewer-role
   labels:
-  {{- include "mysql-operator.labels" . | nindent 4 }}
+  {{- include "yamo.labels" . | nindent 4 }}
 rules:
 - apiGroups:
   - database.elnino.tech
   resources:
   - mysqls
   verbs:
-  - '*'
+  - get
+  - list
+  - watch
 - apiGroups:
   - database.elnino.tech
   resources:

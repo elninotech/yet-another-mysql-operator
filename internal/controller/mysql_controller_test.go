@@ -17,9 +17,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
-	"github.com/elninotech/mysql-operator/internal/controller/util"
-	"github.com/elninotech/mysql-operator/internal/controller/util/constants"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util"
+	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 )
 
 var _ = Describe("MySQL Controller", func() {
@@ -128,7 +128,7 @@ var _ = Describe("MySQL Controller", func() {
 
 			sts := &appsv1.StatefulSet{}
 			Expect(k8sClient.Get(ctx, types.NamespacedName{Name: fetched.Name, Namespace: fetched.Namespace}, sts)).To(Succeed())
-			Expect(sts.Spec.Template.Annotations["mysql-operator/config-hash"]).To(Equal(util.HashConfigMapData(cfg.Data)))
+			Expect(sts.Spec.Template.Annotations[util.ConfigHashAnnotation]).To(Equal(util.HashConfigMapData(cfg.Data)))
 			Expect(sts.Spec.Template.Spec.Containers).To(HaveLen(1))
 			container := sts.Spec.Template.Spec.Containers[0]
 			Expect(container.Image).To(Equal(fetched.Spec.Image))

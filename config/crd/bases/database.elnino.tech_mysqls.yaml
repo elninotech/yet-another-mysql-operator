@@ -85,7 +85,7 @@ spec:
                 default: percona/percona-server:8.4
                 type: string
               initImage:
-                default: ghcr.io/elninotech/mysql-operator/init:latest
+                default: ghcr.io/elninotech/yet-another-mysql-operator/init:latest
                 type: string
               mysqlConf:
                 additionalProperties:

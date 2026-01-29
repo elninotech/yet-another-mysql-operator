@@ -16,7 +16,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	databasev1alpha1 "github.com/elninotech/mysql-operator/api/v1alpha1"
+	databasev1alpha1 "github.com/elninotech/yet-another-mysql-operator/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 

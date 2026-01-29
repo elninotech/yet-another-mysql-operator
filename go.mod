@@ -1,4 +1,4 @@
-module github.com/elninotech/mysql-operator
+module github.com/elninotech/yet-another-mysql-operator
 
 go 1.24.0
 
