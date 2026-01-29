@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"strconv"
 	"strings"
@@ -11,11 +12,9 @@ import (
 	"github.com/elninotech/yet-another-mysql-operator/internal/controller/util/constants"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
-
+	"k8s.io/client-go/util/retry"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
-
-	"database/sql"
 )
 
 const clusterDomain = "cluster.local"
@@ -62,8 +61,19 @@ func (r *MySQLReconciler) reconcileGroupReplication(ctx context.Context, mysql *
 			return fmt.Errorf("pick restart candidate: %w", err)
 		}
 		mysql.Status.RestartCandidate = candidate
-		if err := r.Status().Update(ctx, mysql); err != nil {
-			logf.FromContext(ctx).Error(err, "status update failed")
+		desiredStatus := mysql.Status
+		if err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+			var latest databasev1alpha1.MySQL
+			if err := r.Get(ctx, types.NamespacedName{
+				Name:      mysql.Name,
+				Namespace: mysql.Namespace,
+			}, &latest); err != nil {
+				return err
+			}
+			latest.Status = desiredStatus
+			return r.Status().Update(ctx, &latest)
+		}); err != nil {
+			logf.FromContext(ctx).Error(err, "status update failed after retry")
 		}
 		return nil // status update will trigger another reconcile
 	}
@@ -235,8 +245,19 @@ func (r *MySQLReconciler) reconcilePods(
 	}
 
 	if statusDirty {
-		if err := r.Status().Update(ctx, mysql); err != nil {
-			logf.FromContext(ctx).Error(err, "status update failed")
+		desiredStatus := mysql.Status
+		if err := retry.RetryOnConflict(retry.DefaultRetry, func() error {
+			var latest databasev1alpha1.MySQL
+			if err := r.Get(ctx, types.NamespacedName{
+				Name:      mysql.Name,
+				Namespace: mysql.Namespace,
+			}, &latest); err != nil {
+				return err
+			}
+			latest.Status = desiredStatus
+			return r.Status().Update(ctx, &latest)
+		}); err != nil {
+			logf.FromContext(ctx).Error(err, "status update failed after retry")
 		}
 	}
 	return nil
