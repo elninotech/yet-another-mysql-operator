@@ -1,0 +1,54 @@
+name: Build Docker Image
+
+on:
+  push:
+    tags: ['*']          
+  pull_request:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write      
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute image tag
+        id: vars
+        run: |
+          if [[ "${GITHUB_EVENT_NAME}" == "push" && "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "image_tag=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+            echo "push_latest=true" >> $GITHUB_OUTPUT
+          else
+            slug=$(echo "${GITHUB_HEAD_REF}" | tr '[:upper:]' '[:lower:]' | tr '/ _' '-' | tr -cd 'a-z0-9.-')
+            echo "image_tag=${slug:-sha-${GITHUB_SHA:0:7}}" >> $GITHUB_OUTPUT
+            echo "push_latest=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Log in to registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.image_tag }}
+
+      - name: Tag as latest (tags only)
+        if: steps.vars.outputs.push_latest == 'true'
+        run: |
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.vars.outputs.image_tag }} \
+                     ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
