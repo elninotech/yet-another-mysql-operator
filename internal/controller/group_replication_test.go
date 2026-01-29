@@ -110,9 +110,9 @@ func (f *recordingGRFactory) New(_ context.Context, dsn string) (grClient, error
 	pod := podNameFromDSN(dsn)
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	client := &recordingGRClient{pod: pod, factory: f}
-	f.calls[pod] = client
-	return client, nil
+	rc := &recordingGRClient{pod: pod, factory: f}
+	f.calls[pod] = rc
+	return rc, nil
 }
 
 type recordingGRClient struct {
