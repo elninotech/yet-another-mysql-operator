@@ -3,13 +3,14 @@ package groupreplication
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"sort"
 	"strings"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 type Config struct {
@@ -201,9 +202,37 @@ func bootstrapGroup(ctx context.Context, db *sql.DB, pw string) error {
 	return nil
 }
 
+func localStateDesc(ctx context.Context, db *sql.DB) (string, error) {
+    var state string
+    err := db.QueryRowContext(ctx, `
+SELECT VARIABLE_VALUE
+FROM performance_schema.global_status
+WHERE VARIABLE_NAME = 'group_replication_local_state_desc';`,
+    ).Scan(&state)
+    if err == sql.ErrNoRows {
+        return "OFFLINE", nil
+    }
+    return state, err
+}
+
 // Performs join query returns possible error
 func joinGroup(ctx context.Context, db *sql.DB, pw string) error {
+    state, err := localStateDesc(ctx, db)
+    if err != nil {
+        return fmt.Errorf("local state: %w", err)
+    }
+
+    switch state {
+    case "ONLINE", "RECOVERING":
+        return nil
+    }
+
 	if _, err := db.ExecContext(ctx, "START GROUP_REPLICATION USER='rpl_user', PASSWORD=?", pw); err != nil {
+        var me *mysql.MySQLError
+        if errors.As(err, &me) && me.Number == 3663 {
+			// Group Replication is still joining
+            return nil
+        }
 		return fmt.Errorf("join: %w", err)
 	}
 	log.Println("joined group replication")
