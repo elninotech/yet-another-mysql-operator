@@ -11,7 +11,7 @@ controllerManager:
           - ALL
     image:
       repository: ghcr.io/elninotech/yet-another-mysql-operator
-      tag: 0.5.0
+      tag: 0.5.1-dev.1
     resources:
       limits:
         cpu: 500m
